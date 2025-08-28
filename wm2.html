@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal Berita CRUD</title>
+    <style>
+      :root {
+        --bg: #f9fafb;
+        --text: #111;
+        --card: #fff;
+        --meta: #555;
+        --border: #ccc;
+      }
+      body.dark {
+        --bg: #1e293b;
+        --text: #f8fafc;
+        --card: #334155;
+        --meta: #cbd5e1;
+        --border: #475569;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        transition: background 0.3s, color 0.3s;
+      }
+      header {
+        background: var(--card);
+        padding: 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 26px;
+      }
+      header p {
+        margin: 5px 0 0;
+        color: var(--meta);
+      }
+      .toggle-btn {
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        cursor: pointer;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 20px;
+      }
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .actions input,
+      .actions select {
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        flex: 1;
+        background: var(--card);
+        color: var(--text);
+      }
+      .actions button {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .actions button:hover {
+        background: #1e40af;
+      }
+      .news-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 20px;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: background 0.3s;
+      }
+      .card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+      }
+      .card .content {
+        padding: 15px;
+        flex: 1;
+      }
+      .card h3 {
+        font-size: 18px;
+        margin: 0 0 10px;
+      }
+      .card p {
+        font-size: 14px;
+        color: var(--meta);
+        line-height: 1.5;
+        max-height: 60px;
+        overflow: hidden;
+      }
+      .meta {
+        font-size: 12px;
+        color: var(--meta);
+        margin-bottom: 8px;
+      }
+      .buttons {
+        display: flex;
+        gap: 5px;
+      }
+      .buttons button {
+        flex: 1;
+        font-size: 13px;
+        border: none;
+        padding: 6px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .buttons .view {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .buttons .edit {
+        background: #fef9c3;
+        color: #92400e;
+      }
+      .buttons .delete {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      footer {
+        background: var(--card);
+        text-align: center;
+        padding: 20px;
+        margin-top: 40px;
+        border-top: 1px solid var(--border);
+        color: var(--meta);
+      }
+      /* Form overlay */
+      .form-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+      .form-box {
+        background: var(--card);
+        padding: 20px;
+        border-radius: 10px;
+        max-width: 600px;
+        width: 100%;
+        color: var(--text);
+      }
+      .form-box h2 {
+        margin-top: 0;
+      }
+      .form-box label {
+        display: block;
+        margin-top: 10px;
+        font-size: 14px;
+      }
+      .form-box input,
+      .form-box textarea,
+      .form-box select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--bg);
+        color: var(--text);
+      }
+      .form-box textarea {
+        resize: vertical;
+      }
+      .form-actions {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+      }
+      .form-actions button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+      .save {
+        background: #16a34a;
+        color: white;
+      }
+      .cancel {
+        background: #6b7280;
+        color: white;
+      }
+
+      /* Detail View */
+      .detail-view {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--bg);
+        color: var(--text);
+        z-index: 2000;
+        overflow-y: auto;
+        display: none;
+        padding: 20px;
+      }
+      .detail-view img {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      .detail-view h2 {
+        margin-top: 20px;
+        font-size: 26px;
+      }
+      .detail-meta {
+        color: var(--meta);
+        font-size: 14px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+      }
+      .detail-content {
+        font-size: 16px;
+        line-height: 1.6;
+        white-space: pre-line;
+      }
+      .detail-actions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .detail-actions button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .close-btn {
+        background: #dc2626;
+        color: white;
+      }
+      .nav-btn {
+        background: #2563eb;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Portal Berita</h1>
+        <p>Sistem Manajemen Berita CRUD</p>
+      </div>
+      <button class="toggle-btn" id="toggleMode">🌙 Dark Mode</button>
+    </header>
+
+    <div class="container">
+      <!-- Search & filter -->
+      <div class="actions">
+        <input type="text" id="search" placeholder="Cari berita..." />
+        <select id="filter">
+          <option value="">Semua Kategori</option>
+          <option>Politik</option>
+          <option>Ekonomi</option>
+          <option>Teknologi</option>
+          <option>Olahraga</option>
+          <option>Hiburan</option>
+          <option>Kesehatan</option>
+          <option>Pendidikan</option>
+        </select>
+        <button id="addBtn">+ Tambah Berita</button>
+      </div>
+
+      <!-- Grid berita -->
+      <div id="newsGrid" class="news-grid"></div>
+    </div>
+
+    <!-- Form Overlay -->
+    <div id="formOverlay" class="form-overlay">
+      <div class="form-box">
+        <h2 id="formTitle">Tambah Berita Baru</h2>
+        <label>Judul Berita *</label>
+        <input type="text" id="title" />
+        <label>Penulis *</label>
+        <input type="text" id="author" />
+        <label>Kategori *</label>
+        <select id="category">
+          <option value="">Pilih kategori</option>
+          <option>Politik</option>
+          <option>Ekonomi</option>
+          <option>Teknologi</option>
+          <option>Olahraga</option>
+          <option>Hiburan</option>
+          <option>Kesehatan</option>
+          <option>Pendidikan</option>
+        </select>
+        <label>URL Gambar</label>
+        <input type="url" id="image" />
+        <label>Konten Berita *</label>
+        <textarea id="content" rows="5"></textarea>
+        <div class="form-actions">
+          <button class="save" id="saveBtn">Simpan</button>
+          <button class="cancel" id="cancelBtn">Batal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail View -->
+    <div id="detailView" class="detail-view"></div>
+
+    <footer>
+      <h3>Portal Berita CRUD</h3>
+      <p>Sistem manajemen berita dengan fitur Create, Read, Update, Delete</p>
+      <small>© 2025 Portal Berita. Built with HTML + CSS + JS</small>
+    </footer>
+
+    <script>
+      const newsGrid = document.getElementById("newsGrid");
+      const search = document.getElementById("search");
+      const filter = document.getElementById("filter");
+      const formOverlay = document.getElementById("formOverlay");
+      const formTitle = document.getElementById("formTitle");
+      const titleInput = document.getElementById("title");
+      const authorInput = document.getElementById("author");
+      const categoryInput = document.getElementById("category");
+      const imageInput = document.getElementById("image");
+      const contentInput = document.getElementById("content");
+      const saveBtn = document.getElementById("saveBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const addBtn = document.getElementById("addBtn");
+      const toggleMode = document.getElementById("toggleMode");
+      const detailView = document.getElementById("detailView");
+
+      let currentIndex = -1;
+
+      let newsData = [
+        {
+          id: 1,
+          title: "Laptop Jadi Senjata Utama Mahasiswa di Era Digital Learning",
+          content: "Surabaya, pens.ac.id – Perkembangan teknologi digital membuat laptop kini menjadi perangkat wajib bagi mahasiswa di seluruh Indonesia. Tidak hanya digunakan untuk menulis tugas dan laporan, laptop kini berfungsi sebagai pusat pembelajaran daring, riset, hingga pengembangan inovasi berbasis teknologi. Di lingkungan kampus, laptop mendukung mahasiswa dalam mengakses jurnal internasional, melakukan coding, hingga mengikuti perkuliahan hybrid. Menurut pengamat pendidikan digital, keberadaan laptop yang didukung konektivitas internet stabil akan semakin mempercepat transformasi pendidikan menuju era digital learning. Mahasiswa pun diharapkan dapat memanfaatkan perangkat ini secara maksimal, bukan sekadar untuk hiburan, tetapi juga meningkatkan kompetensi dan daya saing global. Selain itu, laptop juga menjadi alat penting dalam pengembangan soft skills seperti manajemen waktu, kolaborasi, dan komunikasi digital. Dengan berbagai aplikasi produktivitas yang tersedia, mahasiswa dapat mengorganisir tugas, berkolaborasi dalam proyek kelompok, serta berkomunikasi dengan dosen dan teman sekelas secara efisien. Namun, tantangan seperti kesenjangan akses teknologi dan literasi digital masih perlu diatasi agar semua mahasiswa dapat merasakan manfaat penuh dari penggunaan laptop dalam proses pembelajaran. Oleh karena itu, institusi pendidikan diharapkan dapat menyediakan fasilitas pendukung serta pelatihan literasi digital guna memastikan semua mahasiswa siap menghadapi tuntutan era digital learning. Dengan demikian, laptop tidak hanya menjadi alat bantu belajar, tetapi juga kunci utama dalam mencetak generasi muda yang adaptif dan inovatif di tengah kemajuan teknologi.",
+          author: "Humas PENS",
+          category: "Pendidikan",
+          publishDate: "2025-08-22",
+          image:
+            "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400",
+        },
+        {
+          id: 2,
+          title: "Layanan Ramah: Wajah Komunikasi di Era Servis Modern",
+         content: "Surabaya, pens.ac.id – Di sebuah sudut kafe modern yang nyaman, terlihat sosok seorang barista tersenyum saat menerima pesanan dari pelanggan. Senyum hangat dan gestur terbuka ini bukan sekadar layanan pelanggan, melainkan simbol pentingnya hubungan antarmanusia di tengah arus digitalisasi yang semakin deras. Di era di mana chatbot dan aplikasi sering mengambil alih interaksi tradisional, momen tatap muka seperti ini tetap menyimpan nilai lebih, yakni kepercayaan dan pengalaman personal.\n\nMenurut pakar komunikasi layanan, kehadiran personal yang menyentuh—seperti senyum dan kontak mata langsung—masih menjadi salah satu faktor utama dalam menciptakan loyalitas pelanggan. “Teknologi memang memudahkan, tapi sentuhan manusiawi yang tulus tetap tak tergantikan,” ujar Ibu Ratna Sari, pengamat layanan konsumen.\n\nKafe-kafe dan layanan publik kini diimbau untuk memadukan efisiensi digital dengan kehangatan layanan langsung. Baik melalui pelatihan etika front-line, maupun sistem layanan hybrid—dengan staf yang siap menyambut pelanggan secara langsung sementara ada opsi digital backup—menghadirkan keseimbangan ideal. Di titik ini, customer experience menjadi semakin personal, bukan sekadar cepat.\n\nAkhir kata, di balik setiap pesanan kopi atau senyuman di meja kasir, tersimpan komitmen pelayan terhadap kepercayaan dan kenyamanan pelanggan—perpaduan klasik yang relevan di segala zaman.",
+         author: "Humas PENS",
+          author: "Humas PENS",
+          category: "Pendidikan",
+          publishDate: "2025-08-21",
+          image:
+            "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400",
+        },
+        {
+          id: 3,
+           title: "Catatan Tangan Masih Jadi Andalan di Tengah Era Digital",
+           content: "Surabaya, pens.ac.id – Di era serba digital, mahasiswa dan profesional tetap menjadikan catatan tangan sebagai media favorit untuk menuangkan ide. Meski aplikasi note-taking di laptop dan smartphone semakin canggih, penelitian menunjukkan bahwa menulis secara manual dapat meningkatkan daya ingat, pemahaman, dan kreativitas.\n\nFenomena ini juga terlihat di lingkungan kampus, di mana mahasiswa kerap mengombinasikan laptop dengan buku catatan dalam kegiatan belajar sehari-hari. 'Menulis dengan tangan membuat saya lebih fokus, sekaligus membantu merangkum informasi dengan cara yang lebih personal,' ujar salah satu mahasiswa PENS.\n\nPakar pendidikan digital menekankan pentingnya keseimbangan antara teknologi dan metode tradisional. Catatan manual dinilai mampu melatih motorik halus sekaligus memperkuat koneksi antara pikiran dan tulisan. Sementara itu, laptop mendukung akses cepat terhadap sumber informasi global.\n\nDengan menggabungkan keduanya, mahasiswa tidak hanya lebih produktif, tetapi juga mampu mengoptimalkan potensi dalam belajar maupun bekerja di era modern.",
+          author: "Humas PENS",
+          category: "Teknologi",
+          publishDate: "2025-08-05",
+          image:
+            "https://images.unsplash.com/photo-1562774053-701939374585?w=400",
+        },
+      ];
+
+      let editingId = null;
+
+      function renderNews() {
+        const keyword = search.value.toLowerCase();
+        const cat = filter.value;
+        newsGrid.innerHTML = "";
+
+        const filtered = newsData.filter(
+          (n) =>
+            (n.title.toLowerCase().includes(keyword) ||
+              n.content.toLowerCase().includes(keyword) ||
+              n.author.toLowerCase().includes(keyword)) &&
+            (cat === "" || n.category === cat)
+        );
+
+        if (filtered.length === 0) {
+          newsGrid.innerHTML =
+            '<p style="grid-column:1/-1;text-align:center;color:gray;">Tidak ada berita ditemukan</p>';
+          return;
+        }
+
+        filtered.forEach((n) => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+          ${n.image ? `<img src="${n.image}" alt="${n.title}">` : ""}
+          <div class="content">
+            <div class="meta">${n.category} | ${n.publishDate}</div>
+            <h3>${n.title}</h3>
+            <p>${n.content}</p>
+            <div class="buttons">
+              <button class="view">Baca</button>
+              <button class="edit">Edit</button>
+              <button class="delete">Hapus</button>
+            </div>
+          </div>
+        `;
+          card.querySelector(".edit").onclick = () => openForm(n);
+          card.querySelector(".delete").onclick = () => deleteNews(n.id);
+          card.querySelector(".view").onclick = () => openDetail(n.id);
+          newsGrid.appendChild(card);
+        });
+      }
+
+      function openDetail(id) {
+        currentIndex = newsData.findIndex((n) => n.id === id);
+        if (currentIndex === -1) return;
+
+        const n = newsData[currentIndex];
+        detailView.innerHTML = `
+          ${n.image ? `<img src="${n.image}" alt="${n.title}">` : ""}
+          <h2>${n.title}</h2>
+          <div class="detail-meta">
+            ${n.category} | ${n.publishDate} | Penulis: ${n.author}
+          </div>
+          <div class="detail-content">${n.content}</div>
+          <div class="detail-actions">
+            <button class="nav-btn" onclick="showPrev()">⬅️ Sebelumnya</button>
+            <button class="close-btn" onclick="closeDetail()">Tutup</button>
+            <button class="nav-btn" onclick="showNext()">➡️ Berikutnya</button>
+          </div>
+        `;
+        detailView.style.display = "block";
+      }
+
+      function closeDetail() {
+        detailView.style.display = "none";
+      }
+
+      function showPrev() {
+        if (currentIndex > 0) {
+          openDetail(newsData[currentIndex - 1].id);
+        }
+      }
+
+      function showNext() {
+        if (currentIndex < newsData.length - 1) {
+          openDetail(newsData[currentIndex + 1].id);
+        }
+      }
+
+      function openForm(news = null) {
+        formOverlay.style.display = "flex";
+        if (news) {
+          formTitle.textContent = "Edit Berita";
+          titleInput.value = news.title;
+          authorInput.value = news.author;
+          categoryInput.value = news.category;
+          imageInput.value = news.image || "";
+          contentInput.value = news.content;
+          editingId = news.id;
+        } else {
+          formTitle.textContent = "Tambah Berita Baru";
+          titleInput.value = "";
+          authorInput.value = "";
+          categoryInput.value = "";
+          imageInput.value = "";
+          contentInput.value = "";
+          editingId = null;
+        }
+      }
+
+      function saveNews() {
+        if (
+          !titleInput.value ||
+          !authorInput.value ||
+          !categoryInput.value ||
+          !contentInput.value
+        ) {
+          alert("Mohon lengkapi semua field wajib");
+          return;
+        }
+        if (editingId) {
+          const idx = newsData.findIndex((n) => n.id === editingId);
+          newsData[idx] = {
+            ...newsData[idx],
+            title: titleInput.value,
+            author: authorInput.value,
+            category: categoryInput.value,
+            image: imageInput.value,
+            content: contentInput.value,
+          };
+        } else {
+          newsData.unshift({
+            id: Date.now(),
+            title: titleInput.value,
+            author: authorInput.value,
+            category: categoryInput.value,
+            image: imageInput.value,
+            content: contentInput.value,
+            publishDate: new Date().toISOString().split("T")[0],
+          });
+        }
+        closeForm();
+        renderNews();
+      }
+
+      function deleteNews(id) {
+        if (confirm("Yakin hapus berita ini?")) {
+          newsData = newsData.filter((n) => n.id !== id);
+          renderNews();
+        }
+      }
+
+      function closeForm() {
+        formOverlay.style.display = "none";
+      }
+
+      addBtn.onclick = () => openForm();
+      saveBtn.onclick = saveNews;
+      cancelBtn.onclick = closeForm;
+      search.oninput = renderNews;
+      filter.onchange = renderNews;
+      toggleMode.onclick = () => {
+        document.body.classList.toggle("dark");
+        toggleMode.textContent = document.body.classList.contains("dark")
+          ? "☀️ Light Mode"
+          : "🌙 Dark Mode";
+      };
+
+      renderNews();
+    </script>
+  </body>
+</html>
+``
