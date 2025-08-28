@@ -1,2 +1,0 @@
-# WebMaster
-Ubayy Tsany G
