@@ -13,6 +13,42 @@ Membuat halaman responsif, menyesuaikan lebar viewport dengan lebar perangkat.
  <title>Portal Berita CRUD</title>
 Judul halaman yang muncul di tab browser.
 
+:root → mendefinisikan variabel global (untuk tema light mode).
+body.dark → mendefinisikan variabel yang sama tapi untuk dark mode.
+Jadi, kalau body punya class dark, semua warna otomatis berubah.
+
+Mengatur font default → Arial.
+Background & warna teks mengikuti variabel (--bg, --text).
+Hilangkan margin & padding default browser.
+Tambahkan transisi halus saat tema berubah.
+
+Header punya background card, padding 20px.
+Ada bayangan tipis.
+Menggunakan flexbox untuk posisi logo & tombol toggle.
+
+Navbar sticky di atas.
+Background transparan dengan blur (efek glass).
+z-index:1000 supaya selalu di atas konten.
+Punya transisi halus.
+
+Saat discroll → padding mengecil & background makin gelap.
+
+Navbar berisi logo + link, rata tengah dengan batas max-width:1200px.
+
+Logo berupa teks biru neon.
+
+Link navigasi horizontal.
+Ada efek hover underline animasi.
+
+Hero = layar penuh (tinggi 100vh).
+Background gradient ungu-biru.
+Menggunakan flex agar konten bisa ditengah.
+
+Singkatnya:
+
+Kode ini sudah lengkap untuk portal berita modern.
+Ada dark mode, navbar sticky dengan efek scroll, hero section gradient, grid berita responsif, form overlay untuk CRUD, dan detail view.
+
 <style> ... </style>
 </head>
 CSS internal untuk styling halaman (dibahas terpisah).
