@@ -3,766 +3,419 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portal Berita CRUD</title>
+    <title>Portfolio Kreatif - Ubayy Tsany Galiadupda</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
     <style>
+      /* --- 3. PEWARNAAN (CSS VARIABLES) --- */
       :root {
-        --bg: #f9fafb;
-        --text: #111;
-        --card: #fff;
-        --meta: #555;
-        --border: #ccc;
+        --primary-color: #2563eb;    /* Biru Royal */
+        --secondary-color: #06b6d4;  /* Cyan Neon */
+        --dark-bg: #0f172a;          /* Slate Dark */
+        --light-bg: #f8fafc;         /* Slate Light */
+        --text-dark: #1e293b;
+        --text-gray: #64748b;
+        --gradient-main: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
       }
-      body.dark {
-        --bg: #1e293b;
-        --text: #f8fafc;
-        --card: #334155;
-        --meta: #cbd5e1;
-        --border: #475569;
-      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+
       body {
-        font-family: Arial, sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        margin: 0;
-        padding: 0;
-        transition: background 0.3s, color 0.3s;
-      }
-      header {
-        background: var(--card);
-        padding: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-       .navbar {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        background: rgba(30, 30, 30, 0.95);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
-        padding: 15px 0;
-        transition: all 0.3s ease;
+        font-family: "Inter", sans-serif;
+        line-height: 1.7;
+        color: var(--text-dark);
+        background-color: var(--light-bg);
+        overflow-x: hidden;
       }
 
+      h1, h2, h3, h4, .logo { font-family: "Poppins", sans-serif; }
+      .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+      /* --- NAVBAR --- */
+      .navbar {
+        position: fixed; top: 0; width: 100%;
+        background: transparent; z-index: 1000;
+        padding: 20px 0; transition: all 0.4s ease;
+      }
       .navbar.scrolled {
-        background: rgba(30, 30, 30, 0.98);
-        padding: 10px 0;
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 15px 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       }
-
-      .nav-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-      }
-
-      .logo {
-        font-size: 1.8rem;
-        font-weight: bold;
-        color: #00d4ff;
-        text-decoration: none;
-      }
-
-      .nav-links {
-        display: flex;
-        list-style: none;
-      }
-
-      .nav-links li {
-        margin: 0 15px;
-      }
-
+      .nav-content { display: flex; justify-content: space-between; align-items: center; }
+      .logo { font-size: 1.5rem; font-weight: 700; color: white; text-decoration: none; }
+      .logo span { color: var(--secondary-color); }
+      
+      .nav-links { display: flex; list-style: none; }
+      .nav-links li { margin: 0 20px; }
       .nav-links a {
-        color: white;
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.3s ease;
-        position: relative;
+        color: rgba(255,255,255,0.8); text-decoration: none; font-weight: 500;
+        position: relative; transition: color 0.3s ease;
       }
+      .nav-links a:hover { color: var(--secondary-color); }
 
-      .nav-links a:hover {
-        color: #00d4ff;
-      }
-
-      .nav-links a::after {
-        content: "";
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: #00d4ff;
-        transition: width 0.3s ease;
-      }
-
-      .nav-links a:hover::after {
-        width: 100%;
-      }
-
-      /* Hero Section */
+      /* --- HERO SECTION --- */
       .hero {
-        height: 100vh;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
+        min-height: 100vh; background: var(--dark-bg);
+        display: flex; align-items: center; position: relative; overflow: hidden;
       }
+      .hero::after {
+        content: ''; position: absolute; top: -10%; right: -10%;
+        width: 600px; height: 600px;
+        background: radial-gradient(circle, rgba(6,182,212,0.15) 0%, rgba(37,99,235,0) 70%);
+        border-radius: 50%; z-index: 1;
+      }
+      .hero-content { display: flex; align-items: center; gap: 50px; z-index: 2; width: 100%; }
+      .hero-text { flex: 1; color: white; }
+      .hero-text h1 { font-size: 3.5rem; line-height: 1.2; margin-bottom: 15px; font-weight: 800; }
+      .hero-text .subtitle {
+        font-size: 1.5rem; color: #94a3b8; margin-bottom: 30px;
+        font-family: 'Consolas', monospace;
+      }
+      .typewrite-cursor { border-right: 3px solid var(--secondary-color); animation: blink 1s infinite; }
+      @keyframes blink { 50% { border-color: transparent; } }
 
-      .hero::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="0.5" fill="white" opacity="0.1"/><circle cx="40" cy="80" r="1.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-        animation: float 20s ease-in-out infinite;
+      .btn-primary {
+        background: var(--gradient-main); color: white; padding: 14px 35px;
+        border-radius: 50px; text-decoration: none; font-weight: 600;
+        display: inline-block; transition: transform 0.3s;
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
       }
+      .btn-primary:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(37,99,235,0.5); }
 
-      header h1 {
-        margin: 0;
-        font-size: 26px;
+      /* --- HERO IMAGE (PROFIL) FIX --- */
+      .hero-image {
+        flex: 1; display: flex; justify-content: center; align-items: center;
+        position: relative; height: 100%;
       }
-      header p {
-        margin: 5px 0 0;
-        color: var(--meta);
+      .img-wrapper {
+        position: relative; z-index: 2;
+        animation: floatImage 4s ease-in-out infinite;
+        margin-top: -50px; /* Geser ke atas */
       }
-      .toggle-btn {
-        padding: 8px 14px;
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        cursor: pointer;
-        background: var(--bg);
-        color: var(--text);
-      }
-      .container {
-        max-width: 1100px;
-        margin: auto;
-        padding: 20px;
-      }
-      .actions {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 20px;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-      .actions input,
-      .actions select {
-        padding: 10px;
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        flex: 1;
-        background: var(--card);
-        color: var(--text);
-      }
-      .actions button {
-        background: #2563eb;
-        color: white;
-        border: none;
-        padding: 10px 16px;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-      .actions button:hover {
-        background: #1e40af;
-      }
-      .news-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 20px;
-      }
-      .card {
-        background: var(--card);
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        transition: background 0.3s;
-      }
-      .card img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-      }
-      .card .content {
-        padding: 15px;
-        flex: 1;
-      }
-      .card h3 {
-        font-size: 18px;
-        margin: 0 0 10px;
-      }
-      .card p {
-        font-size: 14px;
-        color: var(--meta);
-        line-height: 1.5;
-        max-height: 60px;
-        overflow: hidden;
-      }
-      .meta {
-        font-size: 12px;
-        color: var(--meta);
-        margin-bottom: 8px;
-      }
-      .buttons {
-        display: flex;
-        gap: 5px;
-      }
-      .buttons button {
-        flex: 1;
-        font-size: 13px;
-        border: none;
-        padding: 6px;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      .buttons .view {
-        background: #dbeafe;
-        color: #1e40af;
-      }
-      .buttons .edit {
-        background: #fef9c3;
-        color: #92400e;
-      }
-      .buttons .delete {
-        background: #fee2e2;
-        color: #991b1b;
-      }
-      footer {
-        background: var(--card);
-        text-align: center;
-        padding: 20px;
-        margin-top: 40px;
-        border-top: 1px solid var(--border);
-        color: var(--meta);
-      }
-            .footer {
-        background: #1a1a1a;
-        color: white;
-        padding: 60px 0 30px;
-        text-align: center;
-      }
-
-      .social-links {
-        margin-bottom: 30px;
-      }
-
-      .social-links a {
-        display: inline-block;
-        width: 50px;
-        height: 50px;
-        background: linear-gradient(45deg, #00d4ff, #0099cc);
-        color: white;
+      .profile-img {
+        width: 380px; height: 380px;
+        object-fit: cover; object-position: top center;
         border-radius: 50%;
-        line-height: 50px;
-        font-size: 1.2rem;
-        margin: 0 10px;
-        transition: all 0.3s ease;
+        border: 4px solid var(--secondary-color);
+        box-shadow: 0 0 60px rgba(6, 182, 212, 0.4);
+        transition: all 0.5s ease;
+      }
+      .profile-img:hover { transform: scale(1.02); border-color: #fff; box-shadow: 0 0 80px rgba(37, 99, 235, 0.6); }
+      
+      @keyframes floatImage {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+        100% { transform: translateY(0); }
       }
 
-      .social-links a:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+      /* --- SECTION UMUM --- */
+      .section { padding: 100px 0; }
+      .section-title {
+        text-align: center; font-size: 2.5rem; margin-bottom: 70px;
+        color: var(--dark-bg); position: relative;
+      }
+      .section-title::after {
+        content: ''; display: block; width: 60px; height: 4px;
+        background: var(--gradient-main); margin: 15px auto 0; border-radius: 2px;
       }
 
-      .footer p {
-        color: #ccc;
-        margin-top: 20px;
-      }
-
-      /* Responsive Design */
-      @media (max-width: 768px) {
-        .nav-links {
-          display: none;
-        }
-
-        .hero-content {
-          flex-direction: column;
-          text-align: center;
-          gap: 40px;
-        }
-
-        .hero-text h1 {
-          font-size: 2.5rem;
-        }
-
-        .about-content {
-          grid-template-columns: 1fr;
-          text-align: center;
-        }
-
-        .personal-info {
-          grid-template-columns: 1fr;
-        }
-
-        .education-timeline::before {
-          left: 30px;
-        }
-
-        .education-item {
-          width: calc(100% - 60px);
-          left: 60px !important;
-        }
-
-        .education-item::before {
-          left: -23px !important;
-        }
-
-        .profile-img {
-          width: 250px;
-          height: 250px;
-        }
-      }
-      /* Form overlay */
-      .form-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        display: none;
-        justify-content: center;
+      /* --- ABOUT SECTION (FIXED IMAGE STYLE) --- */
+      .about-content {
+        display: grid; grid-template-columns: 1fr 1.5fr; gap: 50px;
         align-items: center;
-        z-index: 1000;
+        background: white; padding: 40px; border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
       }
-      .form-box {
-        background: var(--card);
-        padding: 20px;
-        border-radius: 10px;
-        max-width: 600px;
-        width: 100%;
-        color: var(--text);
+      .about-img { position: relative; overflow: hidden; border-radius: 20px; }
+      .about-img img {
+        width: 100%; height: 100%; min-height: 350px;
+        object-fit: cover; border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        transition: all 0.4s ease; border: 2px solid transparent;
       }
-      .form-box h2 {
-        margin-top: 0;
-      }
-      .form-box label {
-        display: block;
-        margin-top: 10px;
-        font-size: 14px;
-      }
-      .form-box input,
-      .form-box textarea,
-      .form-box select {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        border: 1px solid var(--border);
-        border-radius: 6px;
-        background: var(--bg);
-        color: var(--text);
-      }
-      .form-box textarea {
-        resize: vertical;
-      }
-      .form-actions {
-        margin-top: 15px;
-        display: flex;
-        gap: 10px;
-      }
-      .form-actions button {
-        flex: 1;
-        padding: 10px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-      }
-      .save {
-        background: #16a34a;
-        color: white;
-      }
-      .cancel {
-        background: #6b7280;
-        color: white;
+      .about-img img:hover {
+        transform: scale(1.03); border-color: var(--secondary-color);
+        box-shadow: 0 25px 50px rgba(37, 99, 235, 0.2);
       }
 
-      /* Detail View */
-      .detail-view {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: var(--bg);
-        color: var(--text);
-        z-index: 2000;
-        overflow-y: auto;
-        display: none;
-        padding: 20px;
+      /* --- EXPERIENCE --- */
+      .experience-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+      .card {
+        background: white; padding: 30px; border-radius: 15px;
+        border: 1px solid #e2e8f0; transition: all 0.3s;
       }
-      .detail-view img {
-        width: 100%;
-        max-height: 400px;
-        object-fit: cover;
-        border-radius: 10px;
+      .card:hover { transform: translateY(-10px); border-color: var(--primary-color); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+      .card-icon { font-size: 2rem; color: var(--primary-color); margin-bottom: 20px; }
+
+      /* --- TIMELINE --- */
+      .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+      .timeline::before {
+        content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 2px; background: #e2e8f0;
       }
-      .detail-view h2 {
-        margin-top: 20px;
-        font-size: 26px;
+      .timeline-item { position: relative; padding-left: 40px; margin-bottom: 50px; }
+      .timeline-dot {
+        position: absolute; left: -9px; top: 0; width: 20px; height: 20px;
+        background: white; border: 4px solid var(--secondary-color);
+        border-radius: 50%; z-index: 2; transition: all 0.3s;
       }
-      .detail-meta {
-        color: var(--meta);
-        font-size: 14px;
-        margin-top: 5px;
-        margin-bottom: 15px;
+      .timeline-item:hover .timeline-dot { background: var(--secondary-color); box-shadow: 0 0 0 5px rgba(6, 182, 212, 0.2); }
+      .timeline-content {
+        background: white; padding: 25px; border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border-left: 4px solid var(--primary-color);
+        transition: transform 0.3s;
       }
-      .detail-content {
-        font-size: 16px;
-        line-height: 1.6;
-        white-space: pre-line;
+      .timeline-item:hover .timeline-content { transform: translateX(10px); }
+      .time-badge {
+        display: inline-block; background: rgba(37,99,235,0.1);
+        color: var(--primary-color); padding: 5px 12px;
+        border-radius: 20px; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px;
       }
-      .detail-actions {
-        margin-top: 20px;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 10px;
+      .school-name { font-size: 1.2rem; font-weight: 700; color: var(--dark-bg); }
+      .degree { color: var(--secondary-color); font-weight: 600; margin-bottom: 10px; display: block; }
+
+      /* --- FOOTER --- */
+      .footer {
+        background: var(--dark-bg); color: white; padding: 60px 0 30px;
+        text-align: center; margin-top: 50px; border-top: 5px solid var(--secondary-color);
       }
-      .detail-actions button {
-        flex: 1;
-        padding: 10px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 14px;
+      .social-links { margin-bottom: 30px; }
+      .social-links a {
+        display: inline-flex; width: 50px; height: 50px;
+        background: rgba(255,255,255,0.1); border-radius: 50%;
+        align-items: center; justify-content: center;
+        color: white; font-size: 1.2rem; margin: 0 10px;
+        text-decoration: none; transition: all 0.3s ease;
       }
-      .close-btn {
-        background: #dc2626;
-        color: white;
-      }
-      .nav-btn {
-        background: #2563eb;
-        color: white;
+      .social-links a:hover { transform: translateY(-5px) scale(1.1); background: var(--secondary-color); box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
+
+      /* --- RESPONSIVE --- */
+      @media (max-width: 768px) {
+        .nav-links { display: none; }
+        .hero-content { flex-direction: column-reverse; text-align: center; }
+        .hero-text h1 { font-size: 2.5rem; }
+        .about-content { grid-template-columns: 1fr; }
+        .profile-img { width: 260px; height: 260px; }
+        .hero-image { margin-top: 40px; }
+        .img-wrapper { margin-top: 0; }
+        .about-img img { min-height: 250px; }
       }
     </style>
   </head>
   <body>
-    <header>
-      <div>
-        <h1>Portal Berita</h1>
-        <p>Sistem Manajemen Berita CRUD</p>
+    
+    <nav class="navbar" id="navbar">
+      <div class="container nav-content">
+        <a href="#home" class="logo">Ubayy<span>Portofolio</span></a>
+        <ul class="nav-links">
+          <li><a href="#home">Beranda</a></li>
+          <li><a href="#about">Tentang</a></li>
+          <li><a href="#experience">Pengalaman</a></li>
+          <li><a href="#education">Pendidikan</a></li>
+        </ul>
       </div>
-      <button class="toggle-btn" id="toggleMode">🌙 Dark Mode</button>
-    </header>
+    </nav>
 
-    <div class="container">
-      <!-- Search & filter -->
-      <div class="actions">
-        <input type="text" id="search" placeholder="Cari berita..." />
-        <select id="filter">
-          <option value="">Semua Kategori</option>
-          <option>Teknologi</option>
-          <option>Pendidikan</option>
-        </select>
-        <button id="addBtn">+ Tambah Berita</button>
-      </div>
-
-      <!-- Grid berita -->
-      <div id="newsGrid" class="news-grid"></div>
-    </div>
-
-    <!-- Form Overlay -->
-    <div id="formOverlay" class="form-overlay">
-      <div class="form-box">
-        <h2 id="formTitle">Tambah Berita Baru</h2>
-        <label>Judul Berita *</label>
-        <input type="text" id="title" />
-        <label>Penulis *</label>
-        <input type="text" id="author" />
-        <label>Kategori *</label>
-        <select id="category">
-          <option value="">Pilih kategori</option>
-          <option>Teknologi</option>
-          <option>Pendidikan</option>
-        </select>
-        <label>URL Gambar</label>
-        <input type="url" id="image" />
-        <label>Konten Berita *</label>
-        <textarea id="content" rows="5"></textarea>
-        <div class="form-actions">
-          <button class="save" id="saveBtn">Simpan</button>
-          <button class="cancel" id="cancelBtn">Batal</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Detail View -->
-    <div id="detailView" class="detail-view"></div>
-
- <footer class="footer">
+    <section id="home" class="hero">
       <div class="container">
-        <div class="social-links">
-          <a
-            href="https://www.linkedin.com/in/ubayy-tsany-galiadupda"
-            target="_blank"
-            ><i class="fab fa-linkedin"></i
-          ></a>
-          <a href="https://github.com/ubayy-tsany-galiadupda" target="_blank"
-            ><i class="fab fa-github"></i
-          ></a>
-          <a href="https://twitter.com/kedaimdl" target="_blank"
-            ><i class="fab fa-twitter"></i
-          ></a>
-          <a
-            href="https://www.instagram.com/ubayytsanygaliadupda"
-            target="_blank"
-            ><i class="fab fa-instagram"></i
-          ></a>
-          <a href="https://gmail:ubayytsany@gmail.com"
-            ><i class="fas fa-envelope"></i
-          ></a>
+        <div class="hero-content">
+          <div class="hero-text">
+            <span style="color: var(--secondary-color); font-weight: 600; letter-spacing: 2px;">PORTFOLIO</span>
+            <h1>Halo, Saya <br>Ubayy Tsany Galiadupda</h1>
+            <div class="subtitle">I am a <span class="txt-type" data-wait="2000" data-words='["Full Stack Developer", "Mahasiswa PENS", "Tech Enthusiast", "Web Designer"]'></span><span class="typewrite-cursor"></span></div>
+            <p>
+              Mahasiswa Baru D4 Teknik Informatika PENS. Menggabungkan kreativitas desain 
+              dan logika pemrograman untuk membangun solusi digital masa depan.
+            </p>
+            <a href="#about" class="btn-primary">Lihat Karya Saya</a>
+          </div>
+          
+          <div class="hero-image">
+            <div class="img-wrapper">
+              <img src="foto-ubayy.jpg" alt="Foto Profil Ubayy Tsany" class="profile-img" onerror="this.src='https://via.placeholder.com/400?text=Foto+Anda'"/>
+            </div>
+          </div>
         </div>
-        <p>&copy; 2025 Ubayy Tsany Galiadupda. Semua hak dilindungi.</p>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="container">
+        <h2 class="section-title">Tentang Saya</h2>
+        <div class="about-content">
+          
+          <div class="about-img">
+             <img src="foto-kegiatan.jpg" alt="Tentang Ubayy" onerror="this.src='https://via.placeholder.com/400x350?text=Foto+Kegiatan'" />
+          </div>
+
+          <div class="about-text">
+            <h3>Passion in Technology</h3>
+            <p style="color: var(--text-gray); margin-bottom: 20px;">
+              Saya adalah seorang pembelajar seumur hidup yang saat ini sedang menempuh pendidikan di Politeknik Elektronika Negeri Surabaya. Saya memiliki ketertarikan kuat pada Web Development, IoT, dan Cyber Security.
+            </p>
+            <ul style="list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <li><i class="fas fa-check-circle" style="color: var(--secondary-color)"></i> Web Design</li>
+              <li><i class="fas fa-check-circle" style="color: var(--secondary-color)"></i> Backend Dev</li>
+              <li><i class="fas fa-check-circle" style="color: var(--secondary-color)"></i> UI/UX Design</li>
+              <li><i class="fas fa-check-circle" style="color: var(--secondary-color)"></i> Database SQL</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience" class="section">
+      <div class="container">
+        <h2 class="section-title">Pengalaman</h2>
+        <div class="experience-grid">
+          <div class="card">
+            <div class="card-icon"><i class="fas fa-code"></i></div>
+            <h3 class="card-title">Freelance Web Dev</h3>
+            <span style="color: var(--primary-color); font-size: 0.9rem;">2023 - Sekarang</span>
+            <p style="color: #64748b; margin-top: 10px;">Mengerjakan proyek web UMKM dan landing page menggunakan HTML, CSS, dan JS.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i class="fas fa-network-wired"></i></div>
+            <h3 class="card-title">Network Intern</h3>
+            <span style="color: var(--primary-color); font-size: 0.9rem;">2022 (PKL SMK)</span>
+            <p style="color: #64748b; margin-top: 10px;">Magang di ISP, menangani konfigurasi Mikrotik dan troubleshooting jaringan.</p>
+          </div>
+          <div class="card">
+            <div class="card-icon"><i class="fas fa-users"></i></div>
+            <h3 class="card-title">Organisasi IT</h3>
+            <span style="color: var(--primary-color); font-size: 0.9rem;">2021 - 2022</span>
+            <p style="color: #64748b; margin-top: 10px;">Aktif dalam organisasi OSIS dan Ekstrakurikuler Komputer di sekolah.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="education" class="section" style="background: white;">
+      <div class="container">
+        <h2 class="section-title">Riwayat Pendidikan</h2>
+        
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="time-badge">2025 - Sekarang</span>
+              <h4 class="school-name">Politeknik Elektronika Negeri Surabaya (PENS)</h4>
+              <span class="degree">D4 Teknik Informatika</span>
+              <p style="color: #64748b;">Fokus pada Rekayasa Perangkat Lunak, Algoritma, dan Struktur Data. Aktif dalam himpunan mahasiswa.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="time-badge">2022 - 2025</span>
+              <h4 class="school-name">SMK Budi Utomo Jombang</h4>
+              <span class="degree">Teknik Komputer dan Jaringan (TKJ)</span>
+              <p style="color: #64748b;">Lulus dengan kompetensi jaringan komputer, hardware, dan dasar pemrograman web.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="time-badge">2019 - 2022</span>
+              <h4 class="school-name">SMP Dharma Bhakti Gresik</h4>
+              <span class="degree">Sekolah Menengah Pertama</span>
+              <p style="color: #64748b;">Aktif dalam kegiatan ekstrakurikuler dan mulai mengenal dunia teknologi dasar.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <span class="time-badge">2013 - 2019</span>
+              <h4 class="school-name">SDN 3 Randuagung</h4>
+              <span class="degree">Sekolah Dasar</span>
+              <p style="color: #64748b;">Menyelesaikan pendidikan dasar dengan nilai baik dan berkarakter.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <h3 style="margin-bottom: 20px;">Hubungi Saya</h3>
+        <div class="social-links">
+          <a href="https://github.com/ubayy-tsany-galiadupda" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/ubayy-tsany-galiadupda" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="https://www.instagram.com/ubayytsanygaliadupda" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://twitter.com/kedaimdl" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="mailto:ubayy.tsany@email.com" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+        <p>&copy; 2024 Ubayy Tsany Galiadupda. All Rights Reserved.</p>
+        <p style="font-size: 0.8rem; color: #888; margin-top: 10px;">D4 Teknik Informatika PENS</p>
       </div>
     </footer>
 
     <script>
-      const newsGrid = document.getElementById("newsGrid");
-      const search = document.getElementById("search");
-      const filter = document.getElementById("filter");
-      const formOverlay = document.getElementById("formOverlay");
-      const formTitle = document.getElementById("formTitle");
-      const titleInput = document.getElementById("title");
-      const authorInput = document.getElementById("author");
-      const categoryInput = document.getElementById("category");
-      const imageInput = document.getElementById("image");
-      const contentInput = document.getElementById("content");
-      const saveBtn = document.getElementById("saveBtn");
-      const cancelBtn = document.getElementById("cancelBtn");
-      const addBtn = document.getElementById("addBtn");
-      const toggleMode = document.getElementById("toggleMode");
-      const detailView = document.getElementById("detailView");
-
-      let currentIndex = -1;
-
-      let newsData = [
-        {
-          id: 1,
-          title: "Laptop Jadi Senjata Utama Mahasiswa di Era Digital Learning",
-          content: "Perkembangan teknologi digital membuat laptop kini menjadi perangkat wajib bagi mahasiswa di seluruh Indonesia. Tidak hanya digunakan untuk menulis tugas dan laporan, laptop kini berfungsi sebagai pusat pembelajaran daring, riset, hingga pengembangan inovasi berbasis teknologi. Di lingkungan kampus, laptop mendukung mahasiswa dalam mengakses jurnal internasional, melakukan coding, hingga mengikuti perkuliahan hybrid. Menurut pengamat pendidikan digital, keberadaan laptop yang didukung konektivitas internet stabil akan semakin mempercepat transformasi pendidikan menuju era digital learning. Mahasiswa pun diharapkan dapat memanfaatkan perangkat ini secara maksimal, bukan sekadar untuk hiburan, tetapi juga meningkatkan kompetensi dan daya saing global. Selain itu, laptop juga menjadi alat penting dalam pengembangan soft skills seperti manajemen waktu, kolaborasi, dan komunikasi digital. Dengan berbagai aplikasi produktivitas yang tersedia, mahasiswa dapat mengorganisir tugas, berkolaborasi dalam proyek kelompok, serta berkomunikasi dengan dosen dan teman sekelas secara efisien. Namun, tantangan seperti kesenjangan akses teknologi dan literasi digital masih perlu diatasi agar semua mahasiswa dapat merasakan manfaat penuh dari penggunaan laptop dalam proses pembelajaran. Oleh karena itu, institusi pendidikan diharapkan dapat menyediakan fasilitas pendukung serta pelatihan literasi digital guna memastikan semua mahasiswa siap menghadapi tuntutan era digital learning. Dengan demikian, laptop tidak hanya menjadi alat bantu belajar, tetapi juga kunci utama dalam mencetak generasi muda yang adaptif dan inovatif di tengah kemajuan teknologi.",
-          author: "Ubayy Tsany Galiadupda",
-          category: "Pendidikan",
-          publishDate: "2025-08-28",
-          image:
-            "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400",
-        },
-        {
-          id: 2,
-          title: "Layanan Ramah: Wajah Komunikasi di Era Servis Modern",
-         content: "Di sebuah sudut kafe modern yang nyaman, terlihat sosok seorang barista tersenyum saat menerima pesanan dari pelanggan. Senyum hangat dan gestur terbuka ini bukan sekadar layanan pelanggan, melainkan simbol pentingnya hubungan antarmanusia di tengah arus digitalisasi yang semakin deras. Di era di mana chatbot dan aplikasi sering mengambil alih interaksi tradisional, momen tatap muka seperti ini tetap menyimpan nilai lebih, yakni kepercayaan dan pengalaman personal.\n\nMenurut pakar komunikasi layanan, kehadiran personal yang menyentuh—seperti senyum dan kontak mata langsung—masih menjadi salah satu faktor utama dalam menciptakan loyalitas pelanggan. “Teknologi memang memudahkan, tapi sentuhan manusiawi yang tulus tetap tak tergantikan,” ujar Ibu Ratna Sari, pengamat layanan konsumen.\n\nKafe-kafe dan layanan publik kini diimbau untuk memadukan efisiensi digital dengan kehangatan layanan langsung. Baik melalui pelatihan etika front-line, maupun sistem layanan hybrid—dengan staf yang siap menyambut pelanggan secara langsung sementara ada opsi digital backup—menghadirkan keseimbangan ideal. Di titik ini, customer experience menjadi semakin personal, bukan sekadar cepat.\n\nAkhir kata, di balik setiap pesanan kopi atau senyuman di meja kasir, tersimpan komitmen pelayan terhadap kepercayaan dan kenyamanan pelanggan—perpaduan klasik yang relevan di segala zaman.",
-         author: "Ubayy Tsany Galiadupda",
-          category: "Pendidikan",
-          publishDate: "2025-08-28",
-          image:
-            "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400",
-        },
-        {
-          id: 3,
-           title: "Catatan Tangan Masih Jadi Andalan di Tengah Era Digital",
-           content: "Di era serba digital, mahasiswa dan profesional tetap menjadikan catatan tangan sebagai media favorit untuk menuangkan ide. Meski aplikasi note-taking di laptop dan smartphone semakin canggih, penelitian menunjukkan bahwa menulis secara manual dapat meningkatkan daya ingat, pemahaman, dan kreativitas.\n\nFenomena ini juga terlihat di lingkungan kampus, di mana mahasiswa kerap mengombinasikan laptop dengan buku catatan dalam kegiatan belajar sehari-hari. 'Menulis dengan tangan membuat saya lebih fokus, sekaligus membantu merangkum informasi dengan cara yang lebih personal,' ujar salah satu mahasiswa PENS.\n\nPakar pendidikan digital menekankan pentingnya keseimbangan antara teknologi dan metode tradisional. Catatan manual dinilai mampu melatih motorik halus sekaligus memperkuat koneksi antara pikiran dan tulisan. Sementara itu, laptop mendukung akses cepat terhadap sumber informasi global.\n\nDengan menggabungkan keduanya, mahasiswa tidak hanya lebih produktif, tetapi juga mampu mengoptimalkan potensi dalam belajar maupun bekerja di era modern.",
-          author: "Ubayy Tsany Galiadupda",
-          category: "Teknologi",
-          publishDate: "2025-08-28",
-          image:
-            "https://images.unsplash.com/photo-1562774053-701939374585?w=400",
-        },
-      ];
-
-      let editingId = null;
-
-      function renderNews() {
-        const keyword = search.value.toLowerCase();
-        const cat = filter.value;
-        newsGrid.innerHTML = "";
-
-        const filtered = newsData.filter(
-          (n) =>
-            (n.title.toLowerCase().includes(keyword) ||
-              n.content.toLowerCase().includes(keyword) ||
-              n.author.toLowerCase().includes(keyword)) &&
-            (cat === "" || n.category === cat)
-        );
-
-        if (filtered.length === 0) {
-          newsGrid.innerHTML =
-            '<p style="grid-column:1/-1;text-align:center;color:gray;">Tidak ada berita ditemukan</p>';
-          return;
+      /* --- TYPEWRITER --- */
+      class TypeWriter {
+        constructor(txtElement, words, wait = 3000) {
+          this.txtElement = txtElement;
+          this.words = words;
+          this.txt = '';
+          this.wordIndex = 0;
+          this.wait = parseInt(wait, 10);
+          this.type();
+          this.isDeleting = false;
         }
+        type() {
+          const current = this.wordIndex % this.words.length;
+          const fullTxt = this.words[current];
+          if(this.isDeleting) { this.txt = fullTxt.substring(0, this.txt.length - 1); } 
+          else { this.txt = fullTxt.substring(0, this.txt.length + 1); }
+          
+          this.txtElement.innerHTML = `<span class="txt">${this.txt}</span>`;
+          let typeSpeed = 100;
+          if(this.isDeleting) typeSpeed /= 2;
 
-        filtered.forEach((n) => {
-          const card = document.createElement("div");
-          card.className = "card";
-          card.innerHTML = `
-          ${n.image ? `<img src="${n.image}" alt="${n.title}">` : ""}
-          <div class="content">
-            <div class="meta">${n.category} | ${n.publishDate}</div>
-            <h3>${n.title}</h3>
-            <p>${n.content}</p>
-            <div class="buttons">
-              <button class="view">Baca</button>
-              <button class="edit">Edit</button>
-              <button class="delete">Hapus</button>
-            </div>
-          </div>
-        `;
-          card.querySelector(".edit").onclick = () => openForm(n);
-          card.querySelector(".delete").onclick = () => deleteNews(n.id);
-          card.querySelector(".view").onclick = () => openDetail(n.id);
-          newsGrid.appendChild(card);
-        });
+          if(!this.isDeleting && this.txt === fullTxt) { typeSpeed = this.wait; this.isDeleting = true; } 
+          else if(this.isDeleting && this.txt === '') { this.isDeleting = false; this.wordIndex++; typeSpeed = 500; }
+          
+          setTimeout(() => this.type(), typeSpeed);
+        }
       }
-
-      function openDetail(id) {
-        currentIndex = newsData.findIndex((n) => n.id === id);
-        if (currentIndex === -1) return;
-
-        const n = newsData[currentIndex];
-        detailView.innerHTML = `
-          ${n.image ? `<img src="${n.image}" alt="${n.title}">` : ""}
-          <h2>${n.title}</h2>
-          <div class="detail-meta">
-            ${n.category} | ${n.publishDate} | Penulis: ${n.author}
-          </div>
-          <div class="detail-content">${n.content}</div>
-          <div class="detail-actions">
-            <button class="nav-btn" onclick="showPrev()">⬅️ Sebelumnya</button>
-            <button class="close-btn" onclick="closeDetail()">Tutup</button>
-            <button class="nav-btn" onclick="showNext()">➡️ Berikutnya</button>
-          </div>
-        `;
-        detailView.style.display = "block";
-      }
-            // Smooth scrolling for navigation links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        });
+      document.addEventListener('DOMContentLoaded', () => {
+        const txtElement = document.querySelector('.txt-type');
+        const words = JSON.parse(txtElement.getAttribute('data-words'));
+        const wait = txtElement.getAttribute('data-wait');
+        new TypeWriter(txtElement, words, wait);
       });
 
-      function closeDetail() {
-        detailView.style.display = "none";
-      }
+      /* --- NAVBAR SCROLL --- */
+      const navbar = document.getElementById("navbar");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) navbar.classList.add("scrolled");
+        else navbar.classList.remove("scrolled");
+      });
 
-      function showPrev() {
-        if (currentIndex > 0) {
-          openDetail(newsData[currentIndex - 1].id);
-        }
-      }
+      /* --- SCROLL REVEAL --- */
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      }, { threshold: 0.1 });
 
-      function showNext() {
-        if (currentIndex < newsData.length - 1) {
-          openDetail(newsData[currentIndex + 1].id);
-        }
-      }
-
-      function openForm(news = null) {
-        formOverlay.style.display = "flex";
-        if (news) {
-          formTitle.textContent = "Edit Berita";
-          titleInput.value = news.title;
-          authorInput.value = news.author;
-          categoryInput.value = news.category;
-          imageInput.value = news.image || "";
-          contentInput.value = news.content;
-          editingId = news.id;
-        } else {
-          formTitle.textContent = "Tambah Berita Baru";
-          titleInput.value = "";
-          authorInput.value = "";
-          categoryInput.value = "";
-          imageInput.value = "";
-          contentInput.value = "";
-          editingId = null;
-        }
-      }
-
-      function saveNews() {
-        if (
-          !titleInput.value ||
-          !authorInput.value ||
-          !categoryInput.value ||
-          !contentInput.value
-        ) {
-          alert("Mohon lengkapi semua field wajib");
-          return;
-        }
-        if (editingId) {
-          const idx = newsData.findIndex((n) => n.id === editingId);
-          newsData[idx] = {
-            ...newsData[idx],
-            title: titleInput.value,
-            author: authorInput.value,
-            category: categoryInput.value,
-            image: imageInput.value,
-            content: contentInput.value,
-          };
-        } else {
-          newsData.unshift({
-            id: Date.now(),
-            title: titleInput.value,
-            author: authorInput.value,
-            category: categoryInput.value,
-            image: imageInput.value,
-            content: contentInput.value,
-            publishDate: new Date().toISOString().split("T")[0],
-          });
-        }
-        closeForm();
-        renderNews();
-      }
-
-      function deleteNews(id) {
-        if (confirm("Yakin hapus berita ini?")) {
-          newsData = newsData.filter((n) => n.id !== id);
-          renderNews();
-        }
-      }
-
-      function closeForm() {
-        formOverlay.style.display = "none";
-      }
-
-      addBtn.onclick = () => openForm();
-      saveBtn.onclick = saveNews;
-      cancelBtn.onclick = closeForm;
-      search.oninput = renderNews;
-      filter.onchange = renderNews;
-      toggleMode.onclick = () => {
-        document.body.classList.toggle("dark");
-        toggleMode.textContent = document.body.classList.contains("dark")
-          ? "☀️ Light Mode"
-          : "🌙 Dark Mode";
-      };
-
-      renderNews();
+      document.querySelectorAll('.card, .about-content, .timeline-item').forEach((el) => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(30px)";
+        el.style.transition = "all 0.6s ease-out";
+        observer.observe(el);
+      });
     </script>
   </body>
 </html>
-``
-
-
-
-
-
-
-
-
-
-
-
-
